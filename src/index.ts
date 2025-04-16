@@ -4,7 +4,7 @@ const app = express();
 console.log(app);
 
 app.get("/", (req, res) => {
-  res.send("Primeira rota da API!");
+  res.send("Teste");
 });
 
 app.listen(3000, () => {

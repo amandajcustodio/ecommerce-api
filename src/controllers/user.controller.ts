@@ -14,7 +14,7 @@ export class UsersController {
     res.send(users);
   }
 
-  public static getOne(req: Request, res: Response) {
+  public static getById(req: Request, res: Response) {
     const userId = +(req.params.id);
     const user = users.find(u => u.id === userId);
   

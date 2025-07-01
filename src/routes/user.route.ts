@@ -6,7 +6,7 @@ usersRoute.use(express.json());
 
 usersRoute.get("/users", UsersController.getAll);
 
-usersRoute.get("/users/:id", UsersController.getOne);
+usersRoute.get("/users/:id", UsersController.getById);
 
 usersRoute.post("/users", UsersController.create);
 

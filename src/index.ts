@@ -1,17 +1,12 @@
-import express, { NextFunction, Request, Response } from "express";
+import express from "express";
 import { routes } from "./routes/index"
 import { initializeApp } from 'firebase-admin/app';
+import { errorHandler } from "./middlewares/error-handler.middleware";
 
 initializeApp();
-
 const app = express();
 
 routes(app);
-
-app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
-  res.status(500).send({
-    message: "Erro interno do servidor!"
-  });
-});
+errorHandler(app);
 
 app.listen(3000);

@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express"
 import { getFirestore } from "firebase-admin/firestore"
 import { ValidationError } from "../errors/validation.error";
+import { NotFoundError } from "../errors/not-found.error";
 
 type User = {
   id: string;
@@ -33,6 +34,10 @@ export class UsersController {
     try {
       const userId = req.params.id;
       const doc = await getFirestore().collection(collection).doc(userId).get();
+
+      if (!doc.exists) {
+        throw new NotFoundError("Usuário não encontrado!");
+      }
     
       res.status(201).send({
         id: doc.id,
@@ -69,6 +74,10 @@ export class UsersController {
       const currUser = await getFirestore().collection(collection).doc(userId).get();
       const reqBody = req.body as User;
 
+      if (!currUser.exists) {
+        throw new NotFoundError("Não foi possível atualizar o usuário!");
+      }
+
       const newUser: User = {
         ...currUser.data(),
         ...reqBody
@@ -87,7 +96,12 @@ export class UsersController {
   public static async delete(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.params.id;
-    
+      const user = await getFirestore().collection(collection).doc(userId).get();
+
+      if (!user.exists) {
+        throw new NotFoundError("Não foi possível deletar o usuário!");
+      }
+
       await getFirestore().collection(collection).doc(userId).delete();
 
       res.status(200).end({

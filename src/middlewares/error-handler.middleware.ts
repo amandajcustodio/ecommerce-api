@@ -9,7 +9,7 @@ export const errorHandler = (app: express.Express) => {
     if (error instanceof ValidationError || error instanceof NotFoundError) {
       error.send(res);
     } else {
-      new InternalServerError(error.message).send(res);
+      new InternalServerError().send(res);
     }
 
   });

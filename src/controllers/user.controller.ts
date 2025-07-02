@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express"
 import { getFirestore } from "firebase-admin/firestore"
+import { ValidationError } from "../errors/validation.error";
 
 type User = {
   id: string;
@@ -46,9 +47,15 @@ export class UsersController {
     try {
       const user = req.body;
 
-      await getFirestore().collection(collection).add(user);
+      if(!user.email) {
+        throw new ValidationError("E-mail é obrigatório!");
+      } else if (!user.name) {
+        throw new ValidationError("Nome é obrigatório!");
+      }
 
-      res.status(204).send({
+      await getFirestore().collection(collection).add(user)
+
+      res.status(200).send({
         message: "Usuário criado com sucesso!"
       });
     } catch (error) {
@@ -59,11 +66,17 @@ export class UsersController {
   public static async update(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.params.id;
-      const newUser = req.body as User;
+      const currUser = await getFirestore().collection(collection).doc(userId).get();
+      const reqBody = req.body as User;
+
+      const newUser: User = {
+        ...currUser.data(),
+        ...reqBody
+      }
 
       await getFirestore().collection(collection).doc(userId).set(newUser)
     
-      res.status(204).send({
+      res.status(200).send({
         message: "Usuário atualizado com sucesso!"
       });
     } catch (error) {
@@ -77,7 +90,7 @@ export class UsersController {
     
       await getFirestore().collection(collection).doc(userId).delete();
 
-      res.status(204).end({
+      res.status(200).end({
         message: "Usuário deletado com sucesso!"
       });
     } catch (error) {

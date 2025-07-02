@@ -1,5 +1,4 @@
 /node_modules
 /lib
-firebase-admin.json
 firebase-adminsdk.json
 .env

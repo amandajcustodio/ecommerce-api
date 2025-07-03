@@ -67,13 +67,14 @@ export class UsersController {
 
   public static async delete(req: Request, res: Response, next: NextFunction) {
     const userId = req.params.id;
-    const user = await getFirestore().collection(collection).doc(userId).get();
+    const docRef = await getFirestore().collection(collection).doc(userId);
+    const user = await docRef.get();
 
     if (!user.exists) {
       throw new NotFoundError("Não foi possível deletar o usuário!");
     }
 
-    await getFirestore().collection(collection).doc(userId).delete();
+    await docRef.delete();
 
     res.status(204).end();
   }

@@ -1,7 +1,6 @@
 import { getFirestore } from "firebase-admin/firestore";
 import { User } from "../models/user.model";
 import { NotFoundError } from "../errors/not-found.error";
-import { Request } from "express";
 
 export class UserService {
   private readonly collection = "users";
@@ -17,8 +16,7 @@ export class UserService {
     });
   }
 
-  public async getById(req: Request): Promise<User> {
-    const userId = req.params.id;
+  public async getById(userId: string): Promise<User> {
     const doc = await getFirestore().collection(this.collection).doc(userId).get();
 
     if (!doc.exists) {
@@ -31,15 +29,12 @@ export class UserService {
     } as User;
   }
 
-  public async create(req: Request): Promise<void> {
-    const user = req.body;
+  public async create(user: User): Promise<void> {
     await getFirestore().collection(this.collection).add(user);
   }
 
-  public async update(req: Request): Promise<void> {
-    const userId = req.params.id;
+  public async update(userId: string, user: User): Promise<void> {
     const docRef = await getFirestore().collection(this.collection).doc(userId);
-    const reqBody = req.body as User;
     const currUser = await docRef.get();
 
     if (!currUser.exists) {
@@ -48,14 +43,13 @@ export class UserService {
 
     const newUser: User = {
       ...currUser.data(),
-      ...reqBody
+      ...user
     }
 
     await docRef.set(newUser)
   }
 
-  public async delete(req: Request): Promise<void> {
-    const userId = req.params.id;
+  public async delete(userId: string): Promise<void> {
     const docRef = await getFirestore().collection(this.collection).doc(userId);
     const user = await docRef.get();
 

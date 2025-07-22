@@ -1,6 +1,7 @@
 import { User } from "../models/user.model";
 import { getAuth, UserRecord } from "firebase-admin/auth";
 import { EmailAlreadyExists } from "../errors/email-already-exists.error";
+import { getAuth as getFirebaseAuth, signInWithEmailAndPassword, UserCredential } from "firebase/auth";
 
 export class AuthService {
   public async create(user: User): Promise<UserRecord> {
@@ -15,5 +16,9 @@ export class AuthService {
 
       throw error;
     });
+  }
+
+  public async login(email: string, password: string): Promise<UserCredential> {
+    return await signInWithEmailAndPassword(getFirebaseAuth(), email, password);
   }
 }

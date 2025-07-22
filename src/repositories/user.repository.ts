@@ -28,10 +28,6 @@ export class UserRepository {
     } as User;
   }
 
-  public async create(user: User): Promise<void> {
-    await this.collection.add(user);
-  }
-
   public async update(user: User): Promise<void> {
     await this.collection.doc(user.id).set(user);
   }

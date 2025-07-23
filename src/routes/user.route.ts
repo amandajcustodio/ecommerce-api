@@ -1,12 +1,11 @@
-import express from "express";
+import { Router } from "express";
 import { UsersController } from "../controllers/user.controller";
 import asyncHandler from "express-async-handler";
 import { celebrate, Segments } from "celebrate";
 import { userSchema } from "../models/user.model";
 import { idSchema } from "../models/base.model";
 
-export const usersRoute = express.Router();
-usersRoute.use(express.json());
+export const usersRoute = Router();
 
 usersRoute.get("/users", asyncHandler(UsersController.getAll));
 

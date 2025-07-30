@@ -3,6 +3,7 @@ import { getAuth, UserRecord } from "firebase-admin/auth";
 import { EmailAlreadyExists } from "../errors/email-already-exists.error";
 import { getAuth as getFirebaseAuth, signInWithEmailAndPassword, UserCredential } from "firebase/auth";
 import { UnauthorizedError } from "../errors/unauthorized.error";
+import { FirebaseError } from "firebase/app";
 
 export class AuthService {
   public async create(user: User): Promise<UserRecord> {
@@ -22,7 +23,7 @@ export class AuthService {
   public async login(email: string, password: string): Promise<UserCredential> {
     return await signInWithEmailAndPassword(getFirebaseAuth(), email, password)
     .catch(error => {
-      if (error.code === "auth/invalid-credential") 
+      if (error instanceof FirebaseError && error.code === "auth/invalid-credential") 
         throw new UnauthorizedError();
 
       throw error;

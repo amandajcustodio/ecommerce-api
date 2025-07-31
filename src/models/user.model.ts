@@ -7,10 +7,16 @@ export type User = {
   password: string
 }
 
-export const userSchema = Joi.object().keys({
+export const createUserSchema = Joi.object().keys({
   name: Joi.string().required(),
   email: Joi.string().email().required(),
   password: Joi.string().min(6).required()
+});
+
+export const updateUserSchema = Joi.object().keys({
+  name: Joi.string().required(),
+  email: Joi.string().email().required(),
+  password: Joi.string().min(6)
 });
 
 export const loginSchema = Joi.object().keys({

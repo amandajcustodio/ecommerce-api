@@ -29,6 +29,10 @@ export class AuthService {
     await getAuth().updateUser(id, props);
   }
 
+  public async delete(id: string): Promise<void> {
+    await getAuth().deleteUser(id);
+  }
+
   public async login(email: string, password: string): Promise<UserCredential> {
     return await signInWithEmailAndPassword(getFirebaseAuth(), email, password)
     .catch(error => {

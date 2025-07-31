@@ -54,6 +54,7 @@ export class UserService {
       throw new NotFoundError("Não foi possível deletar o usuário!");
     }
 
+    await this.authService.delete(userId);
     await this.userRepository.delete(userId);
   }
 }
